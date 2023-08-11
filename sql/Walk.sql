@@ -1,0 +1,21 @@
+DO BEGIN
+SELECT "GJPER",
+    "BUKRS",
+    "WERKS",
+    "BWART",
+    "MATBF",
+    "CHARG_SID",
+    SUM(CAST (STOCK_QTY AS DECIMAL(13, 2))) STOCK_QTY
+FROM "QS5_TO_AIQ"."MATDOC"
+WHERE "GJPER" >= '2023005'
+    AND "BWART" = '101'
+    AND "BUKRS" = '8135'
+    AND WERKS = '6211'
+GROUP BY "GJPER",
+    "BUKRS",
+    "BWART",
+    "WERKS",
+    "MATBF",
+    "CHARG_SID"
+ORDER BY 1;
+END

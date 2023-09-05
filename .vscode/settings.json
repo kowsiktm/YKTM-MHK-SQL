@@ -1,0 +1,72 @@
+{
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 30,
+            "hanaOptions": {
+                "encrypt": false,
+                "sslValidateCertificate": false,
+                "sslCryptoProvider": "openssl"
+            },
+            "previewLimit": 50,
+            "driver": "SAPHana",
+            "server": "achgaohq451.na.int.grp",
+            "port": 31541,
+            "name": "AIQ-MHK_EDW_MART",
+            "group": "AIQ",
+            "database": "MHK_EDW_MART",
+            "username": "E199551",
+            "password": "Panni@22"
+        },
+        {
+            "connectionTimeout": 30,
+            "hanaOptions": {
+                "encrypt": false,
+                "sslValidateCertificate": false,
+                "sslCryptoProvider": "openssl"
+            },
+            "previewLimit": 50,
+            "driver": "SAPHana",
+            "name": "AIQ",
+            "server": "achgaohq451.na.int.grp",
+            "port": 31541,
+            "database": "E199551",
+            "username": "E199551",
+            "password": "Panni@22",
+            "group": "AIQ"
+        },
+        {
+            "connectionTimeout": 30,
+            "hanaOptions": {
+                "encrypt": false,
+                "sslValidateCertificate": false,
+                "sslCryptoProvider": "openssl"
+            },
+            "previewLimit": 50,
+            "driver": "SAPHana",
+            "name": "AIQ-QS5",
+            "server": "achgaohq451.na.int.grp",
+            "port": 31541,
+            "database": "QS5_TO_AIQ",
+            "username": "E199551",
+            "password": "Panni@22",
+            "group": "AIQ"
+        },
+        {
+            "connectionTimeout": 30,
+            "hanaOptions": {
+                "encrypt": false,
+                "sslValidateCertificate": false,
+                "sslCryptoProvider": "openssl"
+            },
+            "previewLimit": 50,
+            "driver": "SAPHana",
+            "server": "achgaohq451.na.int.grp",
+            "port": 31541,
+            "name": "AIQ-SYSBIC",
+            "username": "E199551",
+            "password": "Panni@22",
+            "database": "_SYS_BIC",
+            "group": "AIQ"
+        }
+    ]
+}

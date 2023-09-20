@@ -1,0 +1,21 @@
+DO BEGIN
+SELECT "GJPER",
+    "BUKRS",
+    "WERKS",
+    "BWART",
+    "MATBF",
+    "CHARG_SID",
+    SUM(CAST (STOCK_QTY AS DECIMAL(13, 2))) STOCK_QTY ----DSLGMSGLSMGG	
+FROM "MATDOC"
+WHERE (
+        "GJPER" >= '2023005'
+        AND "BWART" = '101'
+        AND "BUKRS" = '8135'
+    )
+GROUP BY "GJPER",
+    "BUKRS",
+    "BWART",
+    "WERKS",
+    "MATBF",
+    "CHARG_SID";
+END

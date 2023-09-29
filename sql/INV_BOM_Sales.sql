@@ -1,22 +1,25 @@
 SELECT A."VBELN",
-    -- "POSNR",
-    A."MATNR",
+    "POSNR",
+    A."MATNR" Inv_COMP_SKU_On_Order,
     A.WERKS,
-    MATWA,
-    "SELLING_PKG_SKU",
-    D.MATNR,
+    MATWA Selling_COMP_SKU_On_Order,
+    C."SELLING_PKG_SKU" Selling_PKG_SKU,
+    E.INVENTORY_PKG_SKU inv_PKG_SKU,
+    --  D.MATNR,
     "PSTYV",
-    "AUART_ANA",
-    SUM("KWMENG") AS "KWMENG_SUM",
     B.MTART,
     B.MTBEZ,
-    SUM(TOTAL_INV_QUAN)
+    VBTYP,
+    "AUART_ANA",
+    SUM("KWMENG") AS "Order Total",
+    SUM("KWMENG") AS "Assigned Total",
+    SUM(TOTAL_INV_QUAN) Total_Inventory
 FROM "QS5_TO_AIQ"."VBAP" A
     INNER JOIN "QS5_TO_AIQ"."VBAK" X ON A.VBELN = X.VBELN
     left join "_SYS_BIC"."MHK_FNA.Reuse.MasterData/MHK_RVDM_MD_MATERIAL" B -- "QS5_TO_AIQ".MARA B
     ON A.MATNR = B.MATNR
     LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" C ON A.MATWA = "SELLING_COMP_SKU"
-    LEFT JOIN "QS5_TO_AIQ".MAST D ON A.MATWA = D.MATNR
+    LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" E ON E.SELLING_PKG_SKU = C.SELLING_PKG_SKU --LEFT JOIN "QS5_TO_AIQ".MAST D ON A.MATWA = D.MATNR
     LEFT JOIN "_SYS_BIC"."MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY"(
         'PLACEHOLDER' = ('$$IP_CPUDT$$', '20221101'),
         'PLACEHOLDER' = ('$$IP_UOM$$', 'LFT')
@@ -24,8 +27,9 @@ FROM "QS5_TO_AIQ"."VBAP" A
     AND A.WERKS = Y.WERKS
 WHERE "AUART_ANA" = 'ZOR7'
     AND VBTYP = 'C'
+    AND A.VBELN = '1000003225'
 GROUP BY A."VBELN",
-    --"POSNR",
+    "POSNR",
     A."MATNR",
     A.WERKS,
     MATWA,
@@ -33,10 +37,12 @@ GROUP BY A."VBELN",
     "AUART_ANA",
     B.MTART,
     B.MTBEZ,
-    "SELLING_PKG_SKU",
-    D.MATNR
-ORDER BY A."VBELN" ASC,
-    --"POSNR" ASC,
+    VBTYP,
+    C."SELLING_PKG_SKU",
+    E.INVENTORY_PKG_SKU -- D.MATNR
+ORDER BY --"SELLING_PKG_SKU",
+    A."VBELN" ASC,
+    "POSNR" ASC,
     A."MATNR" ASC,
     "PSTYV" ASC,
     "AUART_ANA" ASC;

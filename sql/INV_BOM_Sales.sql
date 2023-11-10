@@ -46,3 +46,165 @@ ORDER BY --"SELLING_PKG_SKU",
     A."MATNR" ASC,
     "PSTYV" ASC,
     "AUART_ANA" ASC;
+---------
+SELECT A."VBELN",
+    "POSNR",
+    A."MATNR" Inv_COMP_SKU_On_Order,
+    A.WERKS,
+    MATWA Selling_COMP_SKU_On_Order,
+    C."SELLING_PKG_SKU" Selling_PKG_SKU,
+    E.INVENTORY_PKG_SKU inv_PKG_SKU,
+    --  D.MATNR,
+    "PSTYV",
+    B.MTART,
+    B.MTBEZ,
+    VBTYP,
+    "AUART_ANA",
+    SUM("KWMENG") AS "Order Total",
+    SUM("KWMENG") AS "Assigned Total",
+    "LAST_SHIP_DATE",
+    "LAST_DELIVERY_NO",
+    SUM("DELIVERY_AMOUNT") AS "DELIVERY_AMOUNT",
+    SUM("DELIVERY_QTY_SALES_UNIT") AS "DELIVERY_QTY_SALES_UNIT",
+    SUM(Y.TOTAL_INV_QUAN) Total_Inventory_Comp,
+    SUM(Z.TOTAL_INV_QUAN) Total_Inventory_Pack
+FROM "QS5_TO_AIQ"."VBAP" A
+    INNER JOIN "QS5_TO_AIQ"."VBAK" X ON A.VBELN = X.VBELN
+    left join "_SYS_BIC"."MHK_FNA.Reuse.MasterData/MHK_RVDM_MD_MATERIAL" B -- "QS5_TO_AIQ".MARA B
+    ON A.MATNR = B.MATNR
+    LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" C ON A.MATWA = "SELLING_COMP_SKU"
+    LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" E ON E.SELLING_PKG_SKU = C.SELLING_PKG_SKU --LEFT JOIN "QS5_TO_AIQ".MAST D ON A.MATWA = D.MATNR
+    LEFT JOIN "_SYS_BIC"."MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY"(
+        'PLACEHOLDER' = ('$$IP_CPUDT$$', '20221101'),
+        'PLACEHOLDER' = ('$$IP_UOM$$', 'LFT')
+    ) Y ON A.MATNR = Y.MATNR
+    AND A.WERKS = Y.WERKS
+    LEFT JOIN "_SYS_BIC"."MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY"(
+        'PLACEHOLDER' = ('$$IP_CPUDT$$', '20221101'),
+        'PLACEHOLDER' = ('$$IP_UOM$$', 'LFT')
+    ) Z ON E.INVENTORY_PKG_SKU = Z.MATNR
+    AND A.WERKS = Z.WERKS
+    left join (
+        SELECT "ORDER_NUM",
+            "ORDER_LINE_NUM",
+            "MATNR",
+            "LAST_SHIP_DATE",
+            "LAST_DELIVERY_NO",
+            SUM("DELIVERY_AMOUNT") AS "DELIVERY_AMOUNT",
+            SUM("DELIVERY_QTY_SALES_UNIT") AS "DELIVERY_QTY_SALES_UNIT"
+        FROM "_SYS_BIC"."MHK_FNA.Reuse.SalesOrders/MHK_RVCU_SO_ORDER_DLV_INV"(
+                'PLACEHOLDER' = ('$$IP_ORDER_DATE_FROM$$', '2023-06-01'),
+                'PLACEHOLDER' = ('$$IP_ORDER_DATE_UPTO$$', '2023-10-03')
+            )
+        GROUP BY "ORDER_NUM",
+            "ORDER_LINE_NUM",
+            "MATNR",
+            "LAST_SHIP_DATE",
+            "LAST_DELIVERY_NO"
+    ) as DEL ON A.VBELN = DEL."ORDER_NUM"
+    AND A.POSNR = DEL."ORDER_LINE_NUM"
+WHERE "AUART_ANA" = 'ZOR7'
+    AND VBTYP = 'C'
+    AND A.VBELN = '1000003225'
+GROUP BY A."VBELN",
+    "POSNR",
+    A."MATNR",
+    A.WERKS,
+    MATWA,
+    "PSTYV",
+    "AUART_ANA",
+    B.MTART,
+    B.MTBEZ,
+    VBTYP,
+    C."SELLING_PKG_SKU",
+    E.INVENTORY_PKG_SKU,
+    "LAST_SHIP_DATE",
+    "LAST_DELIVERY_NO"
+ORDER BY --"SELLING_PKG_SKU",
+    A."VBELN" ASC,
+    "POSNR" ASC,
+    A."MATNR" ASC,
+    "PSTYV" ASC,
+    "AUART_ANA" ASC;
+----
+SELECT A."VBELN",
+    "POSNR",
+    A."MATNR" Inv_COMP_SKU_On_Order,
+    A.WERKS,
+    MATWA Selling_COMP_SKU_On_Order,
+    C."SELLING_PKG_SKU" Selling_PKG_SKU,
+    E.INVENTORY_PKG_SKU inv_PKG_SKU,
+    --  D.MATNR,
+    "PSTYV",
+    B.MTART,
+    B.MTBEZ,
+    VBTYP,
+    "AUART_ANA",
+    SUM("KWMENG") AS "Order Total",
+    SUM("KWMENG") AS "Assigned Total",
+    "LAST_SHIP_DATE",
+    "LAST_DELIVERY_NO",
+    --  SUM("DELIVERY_AMOUNT") AS "DELIVERY_AMOUNT",
+    SUM("DELIVERY_QTY_SALES_UNIT") AS "DELIVERY_QTY_SALES_UNIT",
+    SUM(Y.TOTAL_INV_QUAN) Total_Inventory_Comp,
+    SUM(Z.TOTAL_INV_QUAN) Total_Inventory_Pack
+FROM "QS5_TO_AIQ"."VBAP" A
+    INNER JOIN "QS5_TO_AIQ"."VBAK" X ON A.VBELN = X.VBELN
+    left join "_SYS_BIC"."MHK_FNA.Reuse.MasterData/MHK_RVDM_MD_MATERIAL" B -- "QS5_TO_AIQ".MARA B
+    ON A.MATNR = B.MATNR
+    LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" C ON A.MATWA = "SELLING_COMP_SKU"
+    LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" E ON E.SELLING_PKG_SKU = C.SELLING_PKG_SKU --LEFT JOIN "QS5_TO_AIQ".MAST D ON A.MATWA = D.MATNR
+    LEFT JOIN "_SYS_BIC"."MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY"(
+        'PLACEHOLDER' = ('$$IP_CPUDT$$', '20221101'),
+        'PLACEHOLDER' = ('$$IP_UOM$$', 'LFT')
+    ) Y ON A.MATNR = Y.MATNR
+    AND A.WERKS = Y.WERKS
+    LEFT JOIN "_SYS_BIC"."MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY"(
+        'PLACEHOLDER' = ('$$IP_CPUDT$$', '20221101'),
+        'PLACEHOLDER' = ('$$IP_UOM$$', 'LFT')
+    ) Z ON E.INVENTORY_PKG_SKU = Z.MATNR
+    AND A.WERKS = Z.WERKS
+    left join (
+        SELECT "ORDER_NUM",
+            "ORDER_LINE_NUM",
+            "MATNR",
+            "LAST_SHIP_DATE",
+            "LAST_DELIVERY_NO",
+            -- SUM("DELIVERY_AMOUNT") AS "DELIVERY_AMOUNT",
+            -- SUM("DELIVERY_QTY_SALES_UNIT") AS "DELIVERY_QTY_SALES_UNIT",
+            SUM("SHIPPED_QTY") AS "DELIVERY_QTY_SALES_UNIT"
+        FROM "MHK_EDW_MART"."MHK_FNA.Reuse.SalesOrders::T_FACT_SO_ORDER_LINE"
+            /*FROM "_SYS_BIC"."MHK_FNA.Reuse.SalesOrders/MHK_RVCU_SO_ORDER_DLV_INV"(
+             'PLACEHOLDER' = ('$$IP_ORDER_DATE_FROM$$', '2023-06-01'),
+             'PLACEHOLDER' = ('$$IP_ORDER_DATE_UPTO$$', '2023-10-03')
+             )*/
+        GROUP BY "ORDER_NUM",
+            "ORDER_LINE_NUM",
+            "MATNR",
+            "LAST_SHIP_DATE",
+            "LAST_DELIVERY_NO"
+    ) as DEL ON A.VBELN = DEL."ORDER_NUM"
+    AND A.POSNR = DEL."ORDER_LINE_NUM"
+WHERE "AUART_ANA" = 'ZOR7'
+    AND VBTYP = 'C'
+    AND A.VBELN = '1000000112' --AND A.VBELN = '1000003225'
+GROUP BY A."VBELN",
+    "POSNR",
+    A."MATNR",
+    A.WERKS,
+    MATWA,
+    "PSTYV",
+    "AUART_ANA",
+    B.MTART,
+    B.MTBEZ,
+    VBTYP,
+    C."SELLING_PKG_SKU",
+    E.INVENTORY_PKG_SKU,
+    "LAST_SHIP_DATE",
+    "LAST_DELIVERY_NO"
+ORDER BY --"SELLING_PKG_SKU",
+    A."VBELN" ASC,
+    "POSNR" ASC,
+    A."MATNR" ASC,
+    "PSTYV" ASC,
+    "AUART_ANA" ASC;

@@ -1,0 +1,75 @@
+SELECT "VBELN",
+    "POSNR",
+    "PSTYV",
+    "AUART_ANA",
+    A."MATNR",
+    "MATWA",
+    MTART,
+    MTBEZ,
+    SUM("KWMENG") AS "KWMENG_SUM"
+FROM "_SYS_BIC"."MHK_FNA.Reuse.SalesOrders/MHK_RVCU_SO_ORDER_ITEM/dp/P_SAMPLES"(
+        'PLACEHOLDER' = ('$$IP_ORDER_DATE_FROM$$', '2023-05-27'),
+        'PLACEHOLDER' = ('$$IP_ORDER_DATE_UPTO$$', '2023-09-26')
+    ) A
+    left join "_SYS_BIC"."MHK_FNA.Reuse.MasterData/MHK_RVDM_MD_MATERIAL" B -- "QS5_TO_AIQ".MARA B
+    ON A.MATNR = B.MATNR
+GROUP BY "VBELN",
+    "POSNR",
+    "PSTYV",
+    "AUART_ANA",
+    A."MATNR",
+    "MATWA",
+    MTART,
+    MTBEZ
+ORDER BY "VBELN" ASC,
+    "POSNR" ASC,
+    "PSTYV" ASC,
+    "AUART_ANA" ASC,
+    A."MATNR" ASC,
+    "MATWA" ASC
+SELECT "VBELN",
+    "POSNR",
+    A."MATNR",
+    MATWA,
+    "SELLING_PKG_SKU",
+    D.MATNR,
+    "PSTYV",
+    "AUART_ANA",
+    SUM("KWMENG") AS "KWMENG_SUM",
+    MTART,
+    MTBEZ
+FROM "QS5_TO_AIQ"."VBAP" A
+    left join "_SYS_BIC"."MHK_FNA.Reuse.MasterData/MHK_RVDM_MD_MATERIAL" B -- "QS5_TO_AIQ".MARA B
+    ON A.MATNR = B.MATNR
+    LEFT JOIN "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM" C ON A.MATWA = "SELLING_COMP_SKU"
+    LEFT JOIN "QS5_TO_AIQ".MAST D ON A.MATWA = D.MATNR
+WHERE ("AUART_ANA" = 'ZOR7')
+GROUP BY "VBELN",
+    "POSNR",
+    A."MATNR",
+    MATWA,
+    "PSTYV",
+    "AUART_ANA",
+    MTART,
+    MTBEZ,
+    "SELLING_PKG_SKU",
+    D.MATNR
+ORDER BY "VBELN" ASC,
+    "POSNR" ASC,
+    A."MATNR" ASC,
+    "PSTYV" ASC,
+    "AUART_ANA" ASC;
+SELECT "MANDT",
+    "WERKS",
+    "PACKAGE_SKU_TYPE",
+    "SELLING_PKG_SKU",
+    "INVENTORY_PKG_SKU",
+    "SELLING_COMP_SKU",
+    "INVENTORY_COMP_SKU",
+    "COMP_SKU_TYPE",
+    "MEINS",
+    "MENGE",
+    "STLTY",
+    "STLNR",
+    "STLAN"
+FROM "_SYS_BIC"."Work.inventory.POC/DEL_MHK_IM_BOM"

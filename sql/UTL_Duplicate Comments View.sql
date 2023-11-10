@@ -1,0 +1,15 @@
+select B.COLUMN_NAME,
+    A.*
+from (
+        SELECT VIEW_NAME,
+            COMMENTS,
+            COUNT(*) CNT
+        FROM VIEW_COLUMNS
+        WHERE VIEW_NAME = 'MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY'
+        GROUP BY VIEW_NAME,
+            COMMENTS
+        ORDER BY 3 DESC
+    ) A
+    LEFT JOIN VIEW_COLUMNS B ON A.COMMENTS = B.COMMENTS
+    AND B.VIEW_NAME = A.VIEW_NAME
+WHERE CNT > 1

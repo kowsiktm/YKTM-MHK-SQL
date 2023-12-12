@@ -4,7 +4,8 @@ from (
         SELECT VIEW_NAME,
             COMMENTS,
             COUNT(*) CNT
-        FROM VIEW_COLUMNS
+        FROM VIEW_COLUMNS --WHERE VIEW_NAME = 'MHK_FNA.Reporting.Inventory/MHK_INV_SNAPSHOT'
+            --WHERE VIEW_NAME = 'MHK_FNA.Reuse.Inventory/MHK_RVCU_IM_INV_SNAPSHOT'
         WHERE VIEW_NAME = 'MHK_FNA.Reporting.Inventory/MHK_INV_CURRENT_INVENTORY'
         GROUP BY VIEW_NAME,
             COMMENTS
